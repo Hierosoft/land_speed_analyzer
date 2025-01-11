@@ -9,7 +9,11 @@ When you make animated characters, typically the character is running, walking, 
 - Set the Z MAX to the highest world Z coordinate your foot bone's tail (small end) while on the ground (so that lifted foot frames can be ignored).
   - Frames moving the opposite direction of the selected direction are ignored automatically (lift is assumed).
     - For a walking backwards animation, or if your character faces toward positive Y, be sure to change the direction setting to match.
-- If you have changed defaults, you must enable "Rest Position" in the Armature object's "Data" tab and similar pose features such as the Armature modifier to ensure this add-on can read your poses.
+- If you have changed defaults,
+  - you must choose "Pose Position" in the Armature object's "Data" tab
+![Pose Position button](doc/images/pose_position.png)
+  - and similar pose features such as the Armature modifier to ensure this add-on can read your poses.
+![on mesh, enable armature modifier preview](doc/images/armature_modifier_enabled_in_preview.png)
 - This add-on has only been tested on "actions" in the NLA. In other cases if the land speed is not found please report an issue at <https://github.com/Hierosoft/land_speed_analyzer/issues> and provide an example file.
 - If your feet do not move at a constant rate, you will still have the problem at different parts of your animation that do not match the average. To fix the sliding issue entirely in that case you will have to make foot motion linear while on the ground.
 
