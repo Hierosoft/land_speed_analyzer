@@ -21,6 +21,8 @@ tool(s) used:
 Scope of use: code described in subsections--typically modified by hand to improve logic, variable naming, integration, etc, but in this commit, unmodified.
 
 ## __init__.py
+- 2025-01-10
+
 Create a Blender script that sets a land speed for each element of a new dictionary where the key is the armature name. It will work by getting the foot speed when it is neither lifted above a threshold nor moving forward (assume lifted off ground due to that). Iterate through every object in the scene. If the object is an armature call a get_foot function. There should be a constant called Z_THRESHOLD . The function should iterate the bones and look for "foot.l" (case insensitive using lower()) and return the bone in such a way that the posed position of the tail can be determined, whether that be the bone name or object whatever will be most easily usable later for that purpose, which will be important in the next call. If it does not return None, use the return to call analyze_walk. The function should accept an armature and the bone as described. First set prev_y = None, deltas = []. Then it should loop through each frame of the "Walk" action of the armature if present, otherwise the main timeline. For each frame, get the absolute tail position in world coordinates, accounting for armature scaling, location, rotation etc and set this_y to the result's y. if prev_y is not None, set delta = abs(this_y - prev_y) and append delta to deltas, unless delta is negative in which case do nothing with the delta (comment that the unused case assumes character faces -y).  Whenever the tail of the bone's z is greater than the threshold, also ignore delta. After the loop, average deltas and place the result in the dictionary as described earlier. In the outer code when all calls are done, show a dialog box displaying a string constructed from the dictionary by iterating each key and value, and adding '{key} land speed: {value}\n'
 
 Instead of just saving value, save a dictionary to each key. The sub-dictionary should collect the average delta, the count of foot bones found, the "count of bones above threshold". Also display the "threshold" itself. Also collect and display "foot bone name". Also display "Facing direction: negative". Display the information on separate lines in the dialog neatly.
@@ -68,3 +70,13 @@ NlaStrip has no attribute is_muted
 There is still no delta. I had another conversation with you, and you seem to have discovered that to unstash an action you have to make it active, like bpy.context.object.animation_data.action = strip.action
 
 Ok, now make it into an add-on. Add a section to the View panel of the 3D view, where the user can set Z MAX (rename z threshold to z_max and change the check against it from > to >=) and Facing (drop-down, default to "-Y", other option is "+Y", multiply delta by lookup table directions = {"-Y": 1, "+Y": -1} using facing as key before using any delta)
+
+- 2025-01-10
+
+It works!
+
+If this is __init__.py, what should I name the plugin folder, to meet blender plugin folder naming conventions?
+
+Make a docstring for the module, including a GPL 3.0 header for the co-authors Jake Gustafson and ChatGPT, 2025 January 10.
+
+- NOTE: The GPL license header added to the file is authored by humans at or for the Free Software Foundation and co-authored by ChatGPT in words or word order not identical to the FSF version.

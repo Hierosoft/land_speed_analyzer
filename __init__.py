@@ -1,3 +1,34 @@
+"""
+Land Speed Analyzer Add-on for Blender
+======================================
+
+This Blender add-on analyzes the foot speed of armature elements in a scene.
+It tracks the foot bone movement through each action in the scene, calculates
+the delta of the Y-axis position of the foot, and computes the land speed
+based on foot contact and threshold values.
+
+The user can configure the Z-threshold, facing direction, and view the results
+through the 3D View's side panel.
+
+Co-authors:
+- Jake Gustafson
+- ChatGPT
+
+2025 Jake Gustafson, ChatGPT. See training-disclosure.md for text and/or code
+human-authored and potentially copyrighted.
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+"""
+
 import bpy
 from mathutils import Vector
 
