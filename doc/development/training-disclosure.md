@@ -18,7 +18,7 @@ Subsections of this disclosure contain prompts used to generate content, in a wa
 tool(s) used:
 - GPT-4-Turbo (Version 4o, chatgpt.com)
 
-Scope of use: code described in subsections--typically modified by hand to improve logic, variable naming, integration, etc, but in this commit, unmodified.
+Scope of use: code described in subsections--typically modified by hand to improve logic, variable naming, integration, etc.
 
 ## __init__.py
 - 2025-01-10
@@ -80,3 +80,13 @@ If this is __init__.py, what should I name the plugin folder, to meet blender pl
 Make a docstring for the module, including a GPL 3.0 header for the co-authors Jake Gustafson and ChatGPT, 2025 January 10.
 
 - NOTE: The GPL license header added to the file is authored by humans at or for the Free Software Foundation and co-authored by ChatGPT in words or word order not identical to the FSF version.
+
+- 2025-01-11
+
+Now collect another value called "land speed per second"  that is average_delta multiplied by the frames per second setting of the scene.
+
+- 2025-01-11
+
+Add a new argument to the UI to allow the user to change the default Foot.L
+
+- Human-authored: Add settings arg and lower() to ensure selected foot is found. Rename foot_bone_name to foot. Add `[:1]` to `bones` to prevent averaging multiple bones.

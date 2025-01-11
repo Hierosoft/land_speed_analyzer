@@ -44,6 +44,12 @@ FACING_DIRECTIONS = {
 
 class LandSpeedAnalysisSettings(bpy.types.PropertyGroup):
     """Define the properties for user customization of the analysis."""
+    foot_bone_name: bpy.props.StringProperty(
+        name="Foot Bone Name",
+        description="Name of the foot bone to track (default: 'Foot.L')",
+        default="Foot.L"
+    )
+
     z_max: bpy.props.FloatProperty(
         name="Z Max",
         description="The maximum Z value before foot lift is considered",
@@ -74,7 +80,7 @@ class LandSpeedAnalysisPanel(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         settings = scene.land_speed_analysis_settings
-
+        layout.prop(settings, "foot_bone_name")
         layout.prop(settings, "z_max")
         layout.prop(settings, "facing")
         layout.operator("object.analyze_land_speed", text="Analyze Land Speed")
@@ -94,7 +100,7 @@ class LandSpeedAnalysisOperator(bpy.types.Operator):
         results = {}
         for obj in bpy.data.objects:
             if obj.type == 'ARMATURE' and obj.animation_data:
-                foot_bones = get_foot_bones(obj)
+                foot_bones = get_foot_bones(obj, settings)
                 if foot_bones:
                     # Iterate through NLA tracks to get all actions
                     for track in obj.animation_data.nla_tracks:
@@ -122,6 +128,7 @@ class LandSpeedAnalysisOperator(bpy.types.Operator):
         formatted_results = [
             f"Armature: {armature}\n"
             f"  Action: {data['action_name']}\n"
+            f"  Land speed per sec: {data['land_speed_per_sec']:.4f}\n"
             f"  Average Delta: {data['average_delta']:.4f}\n"
             f"  Foot Bone Count: {data['foot_bone_count']}\n"
             f"  Frames Below Threshold: {data['frames_below_threshold']}\n"
@@ -163,9 +170,11 @@ class DialogOperator(bpy.types.Operator):
         return wm.invoke_props_dialog(self)
 
 
-def get_foot_bones(armature):
-    """Get foot bones matching 'foot.l' in the armature."""
-    return [bone for bone in armature.pose.bones if "foot.l" in bone.name.lower()]
+def get_foot_bones(armature, settings):
+    """Get foot bones matching foot_bone_name in the armature."""
+    # foot = context.scene.land_speed_analyzer_settings.foot_bone_name
+    foot = settings.foot_bone_name
+    return [bone for bone in armature.pose.bones if foot.lower() in bone.name.lower()]
 
 
 def analyze_walk(armature, bones, action, action_name, z_max, facing_direction):
@@ -185,7 +194,7 @@ def analyze_walk(armature, bones, action, action_name, z_max, facing_direction):
         int(action.frame_range[0]), int(action.frame_range[1]) + 1
     ) if action else range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1)
 
-    for bone in bones:
+    for bone in bones[:1]:
         prev_y = None
         for frame in frame_range:
             bpy.context.scene.frame_set(frame)
@@ -213,6 +222,7 @@ def analyze_walk(armature, bones, action, action_name, z_max, facing_direction):
 
     avg_delta = sum(deltas) / len(deltas) if deltas else 0
     return {
+        "land_speed_per_sec": avg_delta * bpy.context.scene.render.fps,
         "average_delta": avg_delta,
         "foot_bone_count": len(bones),
         "frames_below_threshold": frames_below_threshold,
